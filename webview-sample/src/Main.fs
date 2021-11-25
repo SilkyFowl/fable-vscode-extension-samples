@@ -48,7 +48,7 @@ module CatCoding =
             return! updateWebView panel (iter + 1)
         }
 
-    let start _ =
+    let start addDisposable _ =
         /// new webViewPanel
         let panel =
             window.createWebviewPanel ("catCoding", "Cat Coding", !!ViewColumn.One, None)
@@ -57,16 +57,22 @@ module CatCoding =
 
         // Start update loop
         Async.Start(updateWebView panel 0, cts.Token)
+        |> ignore
 
         panel.onDidDispose.Invoke (fun _ ->
             // When the panel is closed, cancel updateWebView loop.
             cts.Cancel()
-            window.showInformationMessage "Cat Coding closed." |> ignore
+
+            window.showInformationMessage "Cat Coding closed."
+            |> ignore
+
             None)
-        |> ignore
+        |> addDisposable
 
         None
 
 let activate (context: ExtensionContext) =
-    !! commands.registerCommand("fable.catCoding.start", CatCoding.start)
-    |> context.subscriptions.Add
+    let addDisposable (d: Disposable) = context.subscriptions.Add !!d
+
+    commands.registerCommand ("fable.catCoding.start", CatCoding.start addDisposable)
+    |> addDisposable
