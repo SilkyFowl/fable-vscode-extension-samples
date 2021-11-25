@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/SilkyFowl/fable-vscode-extension-samples/issues"
   },
-  "homepage": "https://github.com/SilkyFowl/fable-vscode-extension-samples#readme"
+  "homepage": "https://github.com/SilkyFowl/fable-vscode-extension-samples#readme",
+  "devDependencies": {
+    "esbuild": "^0.13.15"
+  }
 }
