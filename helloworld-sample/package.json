@@ -4,7 +4,12 @@
   "description": "Hello World Sample",
   "main": "./dist/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "install": "dotnet tool restore",
+    "build": "dotnet fable src -o build --run npm run esbuild",
+    "start": "dotnet fable watch src -s -o build --run npm run esbuild -- --watch",
+    "esbuild": "esbuild ./build/Main.js --bundle --outfile=dist/main.js --external:vscode --format=cjs --platform=node --sourcemap",
+    "prepack": "npm run build",
+    "pack": "vsce package"
   },
   "repository": {
     "type": "git",
