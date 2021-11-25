@@ -1,0 +1,23 @@
+{
+  "name": "helloworld-sample",
+  "version": "0.0.1",
+  "description": "Hello World Sample",
+  "main": "./dist/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SilkyFowl/fable-vscode-extension-samples.git"
+  },
+  "keywords": [
+    "fable",
+    "fsharp"
+  ],
+  "author": "SilkyFowl",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SilkyFowl/fable-vscode-extension-samples/issues"
+  },
+  "homepage": "https://github.com/SilkyFowl/fable-vscode-extension-samples#readme"
+}
