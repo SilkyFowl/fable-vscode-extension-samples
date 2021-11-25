@@ -456,3 +456,7 @@ $RECYCLE.BIN/
 #Paket dependency manager
 .paket/
 paket-files/
+
+# Fable VsCode
+build/
+dist/
