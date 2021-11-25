@@ -1,8 +1,22 @@
 {
   "name": "helloworld-sample",
   "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.43.0"
+  },
   "description": "Hello World Sample",
   "main": "./dist/main.js",
+  "activationEvents": [
+    "onCommand:fable.sayHello"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "fable.sayHello",
+        "title": "Say Hello from Fable!"
+      }
+    ]
+  },
   "scripts": {
     "install": "dotnet tool restore",
     "build": "dotnet fable src -o build --run npm run esbuild",
