@@ -1,0 +1,15 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "start",
+			"problemMatcher": [
+				"$fable-webpack"
+			],
+			"label": "npm: start",
+			"detail": "dotnet fable watch src -s -o build --run npm run esbuild -- --watch",
+			"isBackground": true
+		}
+	]
+}
