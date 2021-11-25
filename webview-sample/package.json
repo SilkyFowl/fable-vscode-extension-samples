@@ -1,0 +1,46 @@
+{
+  "name": "fable-cat-coding",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.47.0"
+  },
+  "description": "Fable Cat Coding - WebView Sample",
+  "main": "./dist/main.js",
+  "activationEvents": [
+    "onCommand:fable.catCoding.start"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "fable.catCoding.start",
+        "title": "Start new cat coding session",
+        "category": "Cat Coding"
+      }
+    ]
+  },
+  "scripts": {
+    "install": "dotnet tool restore",
+    "build": "dotnet fable src -o build --run npm run esbuild",
+    "start": "dotnet fable watch src -s -o build --run npm run esbuild -- --watch",
+    "esbuild": "esbuild ./build/Main.js --bundle --outfile=dist/main.js --external:vscode --format=cjs --platform=node --sourcemap",
+    "prepack": "npm run build",
+    "pack": "vsce package"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SilkyFowl/fable-vscode-extension-samples.git"
+  },
+  "keywords": [
+    "fable",
+    "fsharp"
+  ],
+  "author": "SilkyFowl",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SilkyFowl/fable-vscode-extension-samples/issues"
+  },
+  "homepage": "https://github.com/SilkyFowl/fable-vscode-extension-samples#readme",
+  "devDependencies": {
+    "esbuild": "^0.13.15"
+  }
+}
