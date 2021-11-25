@@ -53,8 +53,17 @@ module CatCoding =
         let panel =
             window.createWebviewPanel ("catCoding", "Cat Coding", !!ViewColumn.One, None)
 
+        let cts = new System.Threading.CancellationTokenSource()
+
         // Start update loop
-        updateWebView panel 0 |> Async.Start
+        Async.Start(updateWebView panel 0, cts.Token)
+
+        panel.onDidDispose.Invoke (fun _ ->
+            // When the panel is closed, cancel updateWebView loop.
+            cts.Cancel()
+            window.showInformationMessage "Cat Coding closed." |> ignore
+            None)
+        |> ignore
 
         None
 
