@@ -8,7 +8,8 @@
   "main": "./dist/main.js",
   "activationEvents": [
     "onCommand:fable.catCoding.start",
-    "onCommand:fable.catCodingMBP.start"
+    "onCommand:fable.catCodingMBP.start",
+    "onCommand:fable.CatCodingWithViewState.start"
   ],
   "contributes": {
     "commands": [
@@ -21,6 +22,11 @@
         "command": "fable.catCodingMBP.start",
         "title": "Start new cat coding session with MailboxProcessor",
         "category": "Cat Coding"
+      },
+      {
+        "command": "fable.CatCodingWithViewState.start",
+        "title": "Start new cat coding session with ViewState",
+        "category": "Cat Coding"
       }
     ]
   },
@@ -28,7 +34,7 @@
     "install": "dotnet tool restore",
     "build": "dotnet fable src -o build --run npm run esbuild",
     "start": "dotnet fable watch src -s -o build --run npm run esbuild -- --watch",
-    "esbuild": "esbuild build/Main.js build/CatCodingMBP.js --bundle --outdir=dist --external:vscode --format=cjs --platform=node --sourcemap",
+    "esbuild": "esbuild build/Main.js build/CatCodingMBP.js build/CatCodingWithViewState.js --bundle --outdir=dist --external:vscode --format=cjs --platform=node --sourcemap",
     "prepack": "npm run build",
     "pack": "vsce package"
   },
