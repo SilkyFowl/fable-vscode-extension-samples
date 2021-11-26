@@ -34,7 +34,7 @@
     "install": "dotnet tool restore",
     "build": "dotnet fable src -o build --run npm run esbuild",
     "start": "dotnet fable watch src -s -o build --run npm run esbuild -- --watch",
-    "esbuild": "esbuild build/Main.js build/CatCodingMBP.js build/CatCodingWithViewState.js --bundle --outdir=dist --external:vscode --format=cjs --platform=node --sourcemap",
+    "esbuild": "node build.ts",
     "prepack": "npm run build",
     "pack": "vsce package"
   },
