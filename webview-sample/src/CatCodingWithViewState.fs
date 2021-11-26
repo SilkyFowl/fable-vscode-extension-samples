@@ -1,29 +1,7 @@
-module CatCodingWithViewState
+module CatCoding.WithViewState
 
-open Fable.Core
 open Fable.Core.JsInterop
 open Fable.Import.VSCode.Vscode
-
-/// https://github.com/alfonsogarciacaro/vscode-template-fsharp-highlight
-let html = sprintf
-
-/// webView
-let getWebviewContent cat =
-    html
-        """
-    <!DOCTYPE html>
-    <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Cat Coding</title>
-    </head>
-    <body>
-        <img src="%s" width="300" />
-    </body>
-    </html>
-    """
-        cat
 
 let update (panel: WebviewPanel) =
     let title, cat =
@@ -40,7 +18,7 @@ let start addDisposable _ =
     /// new webViewPanel
     let panel =
         window.createWebviewPanel ("catCoding", "Cat Coding", !!ViewColumn.Active, None)
-    
+
     update panel
 
     panel.onDidChangeViewState.Invoke (fun e ->
