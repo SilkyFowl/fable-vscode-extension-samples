@@ -1,7 +1,17 @@
 module CatCoding.MessagePassin
 
+open Fable.Core
 open Fable.Core.JsInterop
 open Fable.Import.VSCode.Vscode
+
+/// Union of Command from WebviewPanel
+[<StringEnum>]
+type Command = | Alert
+
+/// Interface of messages from webview
+type IMessage =
+    abstract command: Command with get, set
+    abstract text: string with get, set
 
 let mutable currentPanel: WebviewPanel option = None
 
@@ -20,11 +30,20 @@ let getWebviewContent _ =
             <h1 id="lines-of-code-counter">0</h1>
 
             <script>
+                const vscode = acquireVsCodeApi();
                 const counter = document.getElementById('lines-of-code-counter');
 
                 let count = 0;
                 setInterval(() => {
                     counter.textContent = count++;
+
+                    // Alert the extension when our cat introduces a bug
+                    if (Math.random() < 0.001 * count) {
+                        vscode.postMessage({
+                            command: 'Alert',
+                            text: '🐛  on line ' + count
+                        })
+                    }
                 }, 100);
 
                 // Handle the message inside the webview
@@ -45,34 +64,46 @@ let getWebviewContent _ =
     """
 
 let start addDisposable _ =
-    currentPanel <-
-        currentPanel
-        |> Option.orElseWith (fun _ ->
-            /// new webViewPanel
-            let panel =
-                window.createWebviewPanel (
-                    "catCoding",
-                    "Cat Coding",
-                    !!ViewColumn.One,
-                    createObj [ "enableScripts" ==> true ]
-                )
+    match currentPanel with
+    | Some panel -> panel.reveal (ViewColumn.Beside, true)
+    | None ->
+        /// new webViewPanel
+        let panel =
+            window.createWebviewPanel (
+                "catCoding",
+                "Cat Coding",
+                !!ViewColumn.Active,
+                createObj [ "enableScripts" ==> true ]
+            )
 
-            let cts = new System.Threading.CancellationTokenSource()
+        let cts = new System.Threading.CancellationTokenSource()
 
 
-            panel.webview.html <- getWebviewContent ()
+        panel.webview.html <- getWebviewContent ()
 
-            panel.onDidDispose.Invoke (fun _ ->
-                // When the panel is closed, cancel updateWebView loop.
-                cts.Cancel()
+        // Handle messages from the webview
+        panel.webview.onDidReceiveMessage.Invoke(
+            Option.map (fun o ->
+                let msg: IMessage = !!o
 
-                window.showInformationMessage "Cat Coding closed."
-                |> ignore
+                match msg.command with
+                | Alert -> window.showErrorMessage (msg.text))
+        )
+        |> addDisposable
 
-                None)
-            |> addDisposable
+        panel.onDidDispose.Invoke (fun _ ->
+            // When the panel is closed, cancel updateWebView loop.
+            cts.Cancel()
 
-            Some panel)
+            window.showInformationMessage "Cat Coding closed."
+            |> ignore
+
+            currentPanel <- None
+
+            None)
+        |> addDisposable
+
+        currentPanel <- Some panel
 
     None
 
@@ -81,4 +112,5 @@ let doRefactor _ =
     |> Option.iter (fun panel ->
         panel.webview.postMessage (createObj [ "command" ==> "refactor" ] |> Some)
         |> ignore)
+
     None
