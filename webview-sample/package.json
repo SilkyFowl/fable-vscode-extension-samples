@@ -9,7 +9,8 @@
   "activationEvents": [
     "onCommand:fable.catCoding.start",
     "onCommand:fable.catCodingMBP.start",
-    "onCommand:fable.CatCodingWithViewState.start"
+    "onCommand:fable.CatCodingWithViewState.start",
+    "onCommand:fable.CatCodingMessagePassing.start"
   ],
   "contributes": {
     "commands": [
@@ -27,6 +28,11 @@
         "command": "fable.CatCodingWithViewState.start",
         "title": "Start new cat coding session with ViewState",
         "category": "Cat Coding"
+      },
+      {
+        "command": "fable.CatCodingMessagePassing.start",
+        "title": "Start new cat coding session with MessagePassing",
+        "category": "Cat Coding"
       }
     ]
   },
@@ -34,7 +40,7 @@
     "install": "dotnet tool restore",
     "build": "dotnet fable src -o build --run npm run esbuild",
     "start": "dotnet fable watch src -s -o build --run npm run esbuild -- --watch",
-    "esbuild": "node build.ts",
+    "esbuild": "node build.js",
     "prepack": "npm run build",
     "pack": "vsce package"
   },

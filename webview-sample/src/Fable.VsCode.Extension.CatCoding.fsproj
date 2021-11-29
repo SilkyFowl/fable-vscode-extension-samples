@@ -12,6 +12,7 @@
     <Compile Include="CatCoding.fs" />
     <Compile Include="CatCodingMBP.fs" />
     <Compile Include="CatCodingWithViewState.fs" />
+    <Compile Include="CatCodingMessagePassing.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />

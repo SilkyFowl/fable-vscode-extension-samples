@@ -14,3 +14,6 @@ let activate (context: ExtensionContext) =
 
     commands.registerCommand ("fable.CatCodingWithViewState.start", CatCoding.WithViewState.start addDisposable)
     |> addDisposable
+
+    commands.registerCommand ("fable.CatCodingMessagePassing.start", CatCoding.MessagePassin.start addDisposable)
+    |> addDisposable
