@@ -3,6 +3,8 @@ module CatCoding.MessagePassin
 open Fable.Core.JsInterop
 open Fable.Import.VSCode.Vscode
 
+let mutable currentPanel: WebviewPanel option = None
+
 let getWebviewContent _ =
     html
         """
@@ -24,29 +26,59 @@ let getWebviewContent _ =
                 setInterval(() => {
                     counter.textContent = count++;
                 }, 100);
+
+                // Handle the message inside the webview
+                window.addEventListener('message', event => {
+
+                    const message = event.data; // The JSON data our extension sent
+
+                    switch (message.command) {
+                        case 'refactor':
+                            count = Math.ceil(count * 0.5);
+                            counter.textContent = count;
+                            break;
+                    }
+                });
             </script>
         </body>
     </html>
     """
 
 let start addDisposable _ =
-    /// new webViewPanel
-    let panel =
-        window.createWebviewPanel ("catCoding", "Cat Coding", !!ViewColumn.One, createObj [ "enableScripts" ==> true ])
+    currentPanel <-
+        currentPanel
+        |> Option.orElseWith (fun _ ->
+            /// new webViewPanel
+            let panel =
+                window.createWebviewPanel (
+                    "catCoding",
+                    "Cat Coding",
+                    !!ViewColumn.One,
+                    createObj [ "enableScripts" ==> true ]
+                )
 
-    let cts = new System.Threading.CancellationTokenSource()
+            let cts = new System.Threading.CancellationTokenSource()
 
 
-    panel.webview.html <- getWebviewContent ()
+            panel.webview.html <- getWebviewContent ()
 
-    panel.onDidDispose.Invoke (fun _ ->
-        // When the panel is closed, cancel updateWebView loop.
-        cts.Cancel()
+            panel.onDidDispose.Invoke (fun _ ->
+                // When the panel is closed, cancel updateWebView loop.
+                cts.Cancel()
 
-        window.showInformationMessage "Cat Coding closed."
-        |> ignore
+                window.showInformationMessage "Cat Coding closed."
+                |> ignore
 
-        None)
-    |> addDisposable
+                None)
+            |> addDisposable
 
+            Some panel)
+
+    None
+
+let doRefactor _ =
+    currentPanel
+    |> Option.iter (fun panel ->
+        panel.webview.postMessage (createObj [ "command" ==> "refactor" ] |> Some)
+        |> ignore)
     None
