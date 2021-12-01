@@ -2,7 +2,8 @@ const { build } = require('esbuild')
 
 build({
   entryPoints: {
-    main: 'build/Main.js'
+    main: 'build/Main.js',
+    panelcontentmain: 'build/PanelContentMain.js'
   },
   bundle: true,
   format: 'cjs',
