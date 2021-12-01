@@ -25,7 +25,7 @@ let agent =
                 | Start addDisposable, Closed ->
                     /// new webViewPanel
                     let panel =
-                        window.createWebviewPanel ("catCoding", "Cat Coding", !!ViewColumn.One, None)
+                        window.createWebviewPanel ("catCoding", "Cat Coding", !^ViewColumn.One, None)
 
                     let cts = new Threading.CancellationTokenSource()
                     // Start update loop

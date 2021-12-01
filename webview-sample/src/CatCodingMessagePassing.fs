@@ -72,7 +72,7 @@ let start addDisposable _ =
             window.createWebviewPanel (
                 "catCoding",
                 "Cat Coding",
-                !!ViewColumn.Active,
+                !^ViewColumn.Active,
                 createObj [ "enableScripts" ==> true ]
             )
 

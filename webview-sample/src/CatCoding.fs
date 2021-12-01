@@ -48,7 +48,7 @@ let rec updateWebView (panel: WebviewPanel) iter =
 let start addDisposable _ =
     /// new webViewPanel
     let panel =
-        window.createWebviewPanel ("catCoding", "Cat Coding", !!ViewColumn.One, None)
+        window.createWebviewPanel ("catCoding", "Cat Coding", !^ViewColumn.One, None)
 
     let cts = new System.Threading.CancellationTokenSource()
 

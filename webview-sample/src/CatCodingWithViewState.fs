@@ -17,7 +17,7 @@ let update (panel: WebviewPanel) =
 let start addDisposable _ =
     /// new webViewPanel
     let panel =
-        window.createWebviewPanel ("catCoding", "Cat Coding", !!ViewColumn.Active, None)
+        window.createWebviewPanel ("catCoding", "Cat Coding", !^ViewColumn.Active, None)
 
     update panel
 
