@@ -1,5 +1,6 @@
 module CatCoding.TypedMessage
 
+open System
 open Fable.Core
 open Fable.Core.JsInterop
 open Fable.Import.VSCode
@@ -9,7 +10,19 @@ open MessageTypes
 
 let mutable currentPanel: WebviewPanel option = None
 
-let getWebviewContent extensionUri =
+let getNonce () =
+    let possible =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+            .ToCharArray()
+
+    let gen = System.Random()
+
+    Seq.init 32 (fun _ ->
+        possible
+        |> (possible.Length - 1 |> gen.Next |> Array.item))
+    |> String.Concat
+
+let getWebviewContent (webview: Webview) extensionUri =
 
     /// Get path to resource on disk
     let scriptPathOnDisk =
@@ -20,25 +33,33 @@ let getWebviewContent extensionUri =
         scriptPathOnDisk.``with`` !!{| scheme = "vscode-resource" |}
         |> string
 
+    let nonce = getNonce ()
+
+    let cspContent =
+        $"default-src 'none'; style-src {webview.cspSource}; img-src {webview.cspSource} https:; script-src 'nonce-{nonce}';"
+
+    /// https://stackoverflow.com/a/43702240/16630205
+    let esModuleExports = @"var exports = {""__esModule"": true};"
+
     html
-        """
+        $"""
     <!DOCTYPE html>
     <html lang="en">
         <head>
             <meta charset="UTF-8">
+            <meta http-equiv="Content-Security-Policy"
+                  content="{cspContent}">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Cat Coding</title>
         </head>
         <body>
             <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" />
             <h1 id="lines-of-code-counter">0</h1>
-            <!-- https://stackoverflow.com/a/43702240/16630205 -->
-            <script>var exports = {"__esModule": true};</script>
-            <script src="%s"></script>
+            <script nonce="{nonce}">{esModuleExports}</script>
+            <script nonce="{nonce}" src="{scriptUri}"></script>
         </body>
     </html>
     """
-        scriptUri
 
 let start extensionUri addDisposable _ =
     match currentPanel with
@@ -51,14 +72,13 @@ let start extensionUri addDisposable _ =
                 "Cat Coding",
                 !^ViewColumn.Active,
                 !!{| enableScripts = true
-                     // Only allow the webview to access resources in our extension's dist directory
                      localResourceRoots = [| vscode.Uri.joinPath (extensionUri, "dist") |] |}
             )
 
         let cts = new System.Threading.CancellationTokenSource()
 
 
-        panel.webview.html <- getWebviewContent extensionUri
+        panel.webview.html <- getWebviewContent panel.webview extensionUri
 
         // Handle messages from the webview
         panel.webview.onDidReceiveMessage.Invoke (fun e ->
