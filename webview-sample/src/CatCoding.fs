@@ -6,6 +6,8 @@ open Fable.Import.VSCode.Vscode
 /// https://github.com/alfonsogarciacaro/vscode-template-fsharp-highlight
 let html = sprintf
 
+let js = sprintf
+
 /// webView
 let getWebviewContent cat =
     html

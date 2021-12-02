@@ -11,18 +11,14 @@ open MessageTypes
 let mutable currentPanel: WebviewPanel option = None
 
 let getNonce () =
-    let possible =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-            .ToCharArray()
+    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 
-    let gen = System.Random()
+    let random = Random()
 
-    Seq.init 32 (fun _ ->
-        possible
-        |> (possible.Length - 1 |> gen.Next |> Array.item))
+    Seq.init 32 (fun _ -> possible[possible.Length - 1 |> random.Next])
     |> String.Concat
 
-let getWebviewContent (webview: Webview) extensionUri =
+let getWebviewContent cspSource extensionUri =
 
     /// Get path to resource on disk
     let scriptPathOnDisk =
@@ -35,11 +31,8 @@ let getWebviewContent (webview: Webview) extensionUri =
 
     let nonce = getNonce ()
 
-    let cspContent =
-        $"default-src 'none'; style-src {webview.cspSource}; img-src {webview.cspSource} https:; script-src 'nonce-{nonce}';"
-
     /// https://stackoverflow.com/a/43702240/16630205
-    let esModuleExports = @"var exports = {""__esModule"": true};"
+    let esModuleExports = js """var exports = {"__esModule": true};"""
 
     html
         $"""
@@ -48,7 +41,10 @@ let getWebviewContent (webview: Webview) extensionUri =
         <head>
             <meta charset="UTF-8">
             <meta http-equiv="Content-Security-Policy"
-                  content="{cspContent}">
+                  content="default-src 'none';
+                           style-src {cspSource};
+                           img-src {cspSource} https:;
+                           script-src 'nonce-{nonce}';">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Cat Coding</title>
         </head>
@@ -75,10 +71,8 @@ let start extensionUri addDisposable _ =
                      localResourceRoots = [| vscode.Uri.joinPath (extensionUri, "dist") |] |}
             )
 
-        let cts = new System.Threading.CancellationTokenSource()
 
-
-        panel.webview.html <- getWebviewContent panel.webview extensionUri
+        panel.webview.html <- getWebviewContent panel.webview.cspSource extensionUri
 
         // Handle messages from the webview
         panel.webview.onDidReceiveMessage.Invoke (fun e ->
@@ -91,9 +85,6 @@ let start extensionUri addDisposable _ =
         |> addDisposable
 
         panel.onDidDispose.Invoke (fun _ ->
-            // When the panel is closed, cancel updateWebView loop.
-            cts.Cancel()
-
             window.showInformationMessage "Cat Coding closed."
             |> ignore
 
