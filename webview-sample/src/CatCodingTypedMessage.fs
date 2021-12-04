@@ -8,56 +8,65 @@ open Fable.Import.VSCode.Vscode
 
 open MessageTypes
 
-let mutable currentPanel: WebviewPanel option = None
+module private Panel =
+    let mutable currentPanel: WebviewPanel option = None
+    let disposables = Collections.Generic.Stack<Disposable>()
 
-let getNonce () =
-    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+    let dispose () =
+        while disposables.Count > 0 do
+            let d = disposables.Pop()
+            d.dispose () |> ignore
 
-    let random = Random()
+    let getNonce () =
+        let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 
-    Seq.init 32 (fun _ -> possible[possible.Length - 1 |> random.Next])
-    |> String.Concat
+        let random = Random()
 
-let getWebviewContent cspSource extensionUri =
+        Seq.init 32 (fun _ -> possible[possible.Length - 1 |> random.Next])
+        |> String.Concat
 
-    /// Get path to resource on disk
-    let scriptPathOnDisk =
-        vscode.Uri.joinPath (extensionUri, "dist", "panelcontentmain.js")
+    let getWebviewContent cspSource extensionUri =
 
-    /// Get the special URI to use with the webview
-    let scriptUri =
-        scriptPathOnDisk.``with`` !!{| scheme = "vscode-resource" |}
-        |> string
+        /// Get path to resource on disk
+        let scriptPathOnDisk =
+            vscode.Uri.joinPath (extensionUri, "dist", "panelcontentmain.js")
 
-    let nonce = getNonce ()
+        /// Get the special URI to use with the webview
+        let scriptUri =
+            scriptPathOnDisk.``with`` !!{| scheme = "vscode-resource" |}
+            |> string
 
-    /// https://stackoverflow.com/a/43702240/16630205
-    let esModuleExports = js """var exports = {"__esModule": true};"""
+        let nonce = getNonce ()
 
-    html
-        $"""
-    <!DOCTYPE html>
-    <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta http-equiv="Content-Security-Policy"
-                  content="default-src 'none';
-                           style-src {cspSource};
-                           img-src {cspSource} https:;
-                           script-src 'nonce-{nonce}';">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Cat Coding</title>
-        </head>
-        <body>
-            <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" />
-            <h1 id="lines-of-code-counter">0</h1>
-            <script nonce="{nonce}">{esModuleExports}</script>
-            <script nonce="{nonce}" src="{scriptUri}"></script>
-        </body>
-    </html>
-    """
+        /// https://stackoverflow.com/a/43702240/16630205
+        let esModuleExports = js """var exports = {"__esModule": true};"""
 
-let start extensionUri addDisposable _ =
+        html
+            $"""
+        <!DOCTYPE html>
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta http-equiv="Content-Security-Policy"
+                    content="default-src 'none';
+                            style-src {cspSource};
+                            img-src {cspSource} https:;
+                            script-src 'nonce-{nonce}';">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Cat Coding</title>
+            </head>
+            <body>
+                <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" />
+                <h1 id="lines-of-code-counter">0</h1>
+                <script nonce="{nonce}">{esModuleExports}</script>
+                <script nonce="{nonce}" src="{scriptUri}"></script>
+            </body>
+        </html>
+        """
+
+open Panel
+
+let start extensionUri _ =
     match currentPanel with
     | Some panel -> panel.reveal (ViewColumn.Beside, true)
     | None ->
@@ -83,16 +92,18 @@ let start extensionUri addDisposable _ =
             | Refactor -> ()
 
             None)
-        |> addDisposable
+        |> disposables.Push
 
         panel.onDidDispose.Invoke (fun _ ->
             window.showInformationMessage "Cat Coding closed."
             |> ignore
 
+            dispose ()
+
             currentPanel <- None
 
             None)
-        |> addDisposable
+        |> disposables.Push
 
         currentPanel <- Some panel
 
