@@ -12,7 +12,8 @@
     "onCommand:fable.CatCodingWithViewState.start",
     "onCommand:fable.CatCodingMessagePassing.start",
     "onCommand:fable.CatCodingMessagePassing.doRefactor",
-    "onCommand:fable.CatCodingTypedMessage.start"
+    "onCommand:fable.CatCodingTypedMessage.start",
+    "onCommand:fable.CatCodingTypedMessage.doRefactor"
   ],
   "contributes": {
     "commands": [
@@ -44,6 +45,11 @@
       {
         "command": "fable.CatCodingTypedMessage.start",
         "title": "Start new cat coding session with TypedMessage",
+        "category": "Cat Coding"
+      },
+      {
+        "command": "fable.CatCodingTypedMessage.doRefactor",
+        "title": "Do Refactor new cat coding session with TypedMessage",
         "category": "Cat Coding"
       }
     ]

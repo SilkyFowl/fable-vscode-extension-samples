@@ -80,6 +80,7 @@ let start extensionUri addDisposable _ =
 
             match msg.command with
             | Alert -> window.showErrorMessage (msg.text) |> ignore
+            | Refactor -> ()
 
             None)
         |> addDisposable
@@ -94,5 +95,14 @@ let start extensionUri addDisposable _ =
         |> addDisposable
 
         currentPanel <- Some panel
+
+    None
+
+let doRefactor _ =
+    currentPanel
+    |> Option.iter (fun panel ->
+        createMessage Refactor "✨"
+        |> panel.webview.postMessage
+        |> ignore)
 
     None

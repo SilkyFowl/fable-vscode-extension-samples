@@ -20,6 +20,12 @@ let activate (context: ExtensionContext) =
 
     commands.registerCommand ("fable.CatCodingMessagePassing.doRefactor", CatCoding.MessagePassin.doRefactor)
     |> addDisposable
-    
-    commands.registerCommand ("fable.CatCodingTypedMessage.start", CatCoding.TypedMessage.start context.extensionUri addDisposable)
+
+    commands.registerCommand (
+        "fable.CatCodingTypedMessage.start",
+        CatCoding.TypedMessage.start context.extensionUri addDisposable
+    )
+    |> addDisposable
+
+    commands.registerCommand ("fable.CatCodingTypedMessage.doRefactor", CatCoding.TypedMessage.doRefactor)
     |> addDisposable

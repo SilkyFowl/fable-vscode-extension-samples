@@ -4,6 +4,8 @@ open Fable.Core
 open Fable.Core.JS
 
 open MessageTypes
+open Browser
+open Browser.Types
 
 [<AllowNullLiteral>]
 type VSCode =
@@ -16,11 +18,23 @@ let acquireVsCodeApi () : VSCode = jsNative
 
 let vscode = acquireVsCodeApi ()
 
-let window = Browser.Dom.window
-let counter = window.document.getElementById "lines-of-code-counter"
+let counter = document.getElementById "lines-of-code-counter"
 
 // Check if we have an old state to restore from
 let mutable count = vscode.getState () |> Option.defaultValue 0
+
+
+window.addEventListener (
+    "message",
+    fun e ->
+        match (e :?> MessageEvent).data with
+        | Message Refactor msg ->
+            count <- count / 2
+
+            createMessage Alert $"Refactor: {msg.text}"
+            |> vscode.postMessage
+        | _ -> ()
+)
 
 let inline update _ =
     count <- count + 1
