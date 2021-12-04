@@ -1,0 +1,83 @@
+{
+  "name": "fable-cat-coding",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.47.0"
+  },
+  "description": "Fable Cat Coding - WebView Sample",
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onCommand:fable.catCoding.start",
+    "onCommand:fable.catCodingMBP.start",
+    "onCommand:fable.CatCodingWithViewState.start",
+    "onCommand:fable.CatCodingMessagePassing.start",
+    "onCommand:fable.CatCodingMessagePassing.doRefactor",
+    "onCommand:fable.CatCodingTypedMessage.start",
+    "onCommand:fable.CatCodingTypedMessage.doRefactor"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "fable.catCoding.start",
+        "title": "Start new cat coding session",
+        "category": "Cat Coding"
+      },
+      {
+        "command": "fable.catCodingMBP.start",
+        "title": "Start new cat coding session with MailboxProcessor",
+        "category": "Cat Coding"
+      },
+      {
+        "command": "fable.CatCodingWithViewState.start",
+        "title": "Start new cat coding session with ViewState",
+        "category": "Cat Coding"
+      },
+      {
+        "command": "fable.CatCodingMessagePassing.start",
+        "title": "Start new cat coding session with MessagePassing",
+        "category": "Cat Coding"
+      },
+      {
+        "command": "fable.CatCodingMessagePassing.doRefactor",
+        "title": "Do Refactor new cat coding session with MessagePassing",
+        "category": "Cat Coding"
+      },
+      {
+        "command": "fable.CatCodingTypedMessage.start",
+        "title": "Start new cat coding session with TypedMessage",
+        "category": "Cat Coding"
+      },
+      {
+        "command": "fable.CatCodingTypedMessage.doRefactor",
+        "title": "Do Refactor new cat coding session with TypedMessage",
+        "category": "Cat Coding"
+      }
+    ]
+  },
+  "scripts": {
+    "install": "dotnet tool restore && dotnet paket update",
+    "build": "dotnet fable src -o build --run pnpm run esbuild",
+    "start": "dotnet fable watch src -s -o build --run pnpm run esbuild -- --watch",
+    "esbuild": "node build.js",
+    "pack": "pnpm run build && vsce package"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SilkyFowl/fable-vscode-extension-samples.git"
+  },
+  "keywords": [
+    "fable",
+    "fsharp"
+  ],
+  "author": "SilkyFowl",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SilkyFowl/fable-vscode-extension-samples/issues"
+  },
+  "homepage": "https://github.com/SilkyFowl/fable-vscode-extension-samples#readme",
+  "devDependencies": {
+    "esbuild": "^0.13.15",
+    "vsce": "^2.5.1",
+    "yargs": "^17.3.0"
+  }
+}
