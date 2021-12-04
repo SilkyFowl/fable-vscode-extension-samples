@@ -9,7 +9,7 @@
 
 ```sh
 pnpm install
-paket start
+pnpm start
 ```
 
 if use [Highlight HTML/SQL templates in F#](https://marketplace.visualstudio.com/items?itemName=alfonsogarciacaro.vscode-template-fsharp-highlight)...
