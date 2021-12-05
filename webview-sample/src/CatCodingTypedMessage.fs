@@ -68,48 +68,46 @@ module private Panel =
 
 open Panel
 
+let initWebviewPanel extensionUri (panel: WebviewPanel) =
+    panel.webview.html <- getWebviewContent panel.webview.cspSource extensionUri
+
+    // Handle messages from the webview
+    panel.webview.onDidReceiveMessage.Invoke (fun e ->
+        let msg: IMessage = !!e
+
+        match msg.command with
+        | Alert -> window.showErrorMessage (msg.text) |> ignore
+        | Refactor -> ()
+
+        None)
+    |> disposables.Push
+
+    panel.onDidDispose.Invoke (fun _ ->
+        window.showInformationMessage "Cat Coding closed."
+        |> ignore
+
+        dispose ()
+
+        currentPanel <- None
+
+        None)
+    |> disposables.Push
+
 let start extensionUri _ =
     match currentPanel with
     | Some panel -> panel.reveal (ViewColumn.Beside, true)
     | None ->
-        /// new webViewPanel
-        let panel =
+        currentPanel <-
             window.createWebviewPanel (
                 viewType,
                 "Cat Coding",
                 !^ViewColumn.Active,
                 !!{| enableScripts = true
-                     // https://code.visualstudio.com/api/extension-guides/webview#retaincontextwhenhidden
                      retainContextWhenHidden = true
                      localResourceRoots = [| vscode.Uri.joinPath (extensionUri, "dist") |] |}
             )
-
-
-        panel.webview.html <- getWebviewContent panel.webview.cspSource extensionUri
-
-        // Handle messages from the webview
-        panel.webview.onDidReceiveMessage.Invoke (fun e ->
-            let msg: IMessage = !!e
-
-            match msg.command with
-            | Alert -> window.showErrorMessage (msg.text) |> ignore
-            | Refactor -> ()
-
-            None)
-        |> disposables.Push
-
-        panel.onDidDispose.Invoke (fun _ ->
-            window.showInformationMessage "Cat Coding closed."
-            |> ignore
-
-            dispose ()
-
-            currentPanel <- None
-
-            None)
-        |> disposables.Push
-
-        currentPanel <- Some panel
+            |> tap (initWebviewPanel extensionUri)
+            |> Some
 
     None
 
@@ -129,6 +127,6 @@ let serializer extensionUri : WebviewPanelSerializer =
                 window.showInformationMessage $"Cat Coding deserialized. count: {state.count}"
                 |> ignore
 
-                panel.webview.html <- getWebviewContent panel.webview.cspSource extensionUri
+                initWebviewPanel extensionUri panel
             }
             |> Async.StartAsPromise |}
