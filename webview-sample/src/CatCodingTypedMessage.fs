@@ -79,6 +79,8 @@ let start extensionUri _ =
                 "Cat Coding",
                 !^ViewColumn.Active,
                 !!{| enableScripts = true
+                     // https://code.visualstudio.com/api/extension-guides/webview#retaincontextwhenhidden
+                     retainContextWhenHidden = true
                      localResourceRoots = [| vscode.Uri.joinPath (extensionUri, "dist") |] |}
             )
 
