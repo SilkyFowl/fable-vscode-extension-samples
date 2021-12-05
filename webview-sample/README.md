@@ -18,5 +18,6 @@ if use [Highlight HTML/SQL templates in F#](https://marketplace.visualstudio.com
 
 ## ToDo
 
-- [ ] Serialization...`vscode.window.registerWebviewPanelSerializer` not work. How do I make it work?
+- [x] Serialization ... ~~`vscode.window.registerWebviewPanelSerializer` not work. How do I make it work?~~
+  -  [**Make sure that viewType is named correctly!**](https://github.com/SilkyFowl/fable-vscode-extension-samples/pull/12#issue-1071414164)
 - [ ] Use Flamework... [Lit can use WebView content.](https://rodydavis.com/posts/lit-vscode-extension/) It means that Fable.Lit, as well as Elmish and Feliz, could be used.
