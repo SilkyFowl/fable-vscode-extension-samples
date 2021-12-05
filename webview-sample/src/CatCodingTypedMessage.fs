@@ -8,6 +8,8 @@ open Fable.Import.VSCode.Vscode
 
 open MessageTypes
 
+let viewType = "fable.CatCoding.TypedMessage"
+
 module private Panel =
     let mutable currentPanel: WebviewPanel option = None
     let disposables = Collections.Generic.Stack<Disposable>()
@@ -73,7 +75,7 @@ let start extensionUri _ =
         /// new webViewPanel
         let panel =
             window.createWebviewPanel (
-                "catCoding",
+                viewType,
                 "Cat Coding",
                 !^ViewColumn.Active,
                 !!{| enableScripts = true
@@ -117,3 +119,14 @@ let doRefactor _ =
         |> ignore)
 
     None
+
+let serializer extensionUri : WebviewPanelSerializer =
+    !!{| deserializeWebviewPanel =
+        fun (panel: WebviewPanel) (state: State) ->
+            async {
+                window.showInformationMessage $"Cat Coding deserialized. count: {state.count}"
+                |> ignore
+
+                panel.webview.html <- getWebviewContent panel.webview.cspSource extensionUri
+            }
+            |> Async.StartAsPromise |}

@@ -26,3 +26,8 @@ let activate (context: ExtensionContext) =
 
     commands.registerCommand ("fable.CatCodingTypedMessage.doRefactor", CatCoding.TypedMessage.doRefactor)
     |> addDisposable
+
+    window.registerWebviewPanelSerializer (
+        CatCoding.TypedMessage.viewType,
+        CatCoding.TypedMessage.serializer context.extensionUri
+    )
