@@ -2,6 +2,9 @@ module MessageTypes
 
 open Fable.Core
 
+type State =
+    {count:int}
+
 [<StringEnum>]
 type Command =
     | Alert

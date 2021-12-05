@@ -13,7 +13,8 @@
     "onCommand:fable.CatCodingMessagePassing.start",
     "onCommand:fable.CatCodingMessagePassing.doRefactor",
     "onCommand:fable.CatCodingTypedMessage.start",
-    "onCommand:fable.CatCodingTypedMessage.doRefactor"
+    "onCommand:fable.CatCodingTypedMessage.doRefactor",
+    "onWebviewPanel:fable.CatCoding.TypedMessage"
   ],
   "contributes": {
     "commands": [
