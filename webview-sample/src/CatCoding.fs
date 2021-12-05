@@ -3,6 +3,12 @@ module CatCoding
 open Fable.Core.JsInterop
 open Fable.Import.VSCode.Vscode
 
+[<AutoOpen>]
+module Helpler =
+    let inline tap ([<InlineIfLambda>] sideEffect) x =
+        sideEffect x
+        x
+
 /// https://github.com/alfonsogarciacaro/vscode-template-fsharp-highlight
 let html = sprintf
 
