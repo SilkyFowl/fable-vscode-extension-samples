@@ -1,0 +1,38 @@
+{
+  "name": "webview-lit-sample",
+  "description": "webview-lit-sample",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.43.0"
+  },
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onCommand:webview-lit-sample.sayHello"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "webview-lit-sample.sayHello",
+        "title": "Say Hello from Fable!"
+      }
+    ]
+  },
+  "scripts": {
+    "install": "dotnet tool restore && dotnet paket update",
+     "build": "dotnet fable src -o build --run pnpm run esbuild",
+     "start": "dotnet fable watch src -s -o build --run pnpm run esbuild -- --watch",
+     "pack": "pnpm run build && vsce package",
+    "esbuild": "node esbuild"
+  },
+  "keywords": [
+    "fable",
+    "fsharp"
+  ],
+  "author": "",
+  "license": "",
+  "devDependencies": {
+    "esbuild": "^0.13.15",
+    "vsce": "^2.5.1",
+    "yargs": "^17.3.0"
+  }
+}
