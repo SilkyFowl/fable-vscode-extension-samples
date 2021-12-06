@@ -14,9 +14,11 @@ const argv = yargs
 
 build({
     entryPoints: {
-        extension: 'build/Extension.js'
+        extension: 'build/Extension.js',
+        main: 'build/MyContainer.js'
     },
     bundle: true,
+    minify: !argv.watch,
     format: 'cjs',
     outdir: 'dist',
     external: ['vscode'],

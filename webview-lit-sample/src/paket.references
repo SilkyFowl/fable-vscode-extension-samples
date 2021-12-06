@@ -1,4 +1,6 @@
 FSharp.Core
 Fable.Core
-
+Fable.Lit.Test
+Fable.Lit
+Fable.Promise
 File:Fable.Import.VSCode.fs

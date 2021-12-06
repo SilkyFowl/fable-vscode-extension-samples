@@ -7,21 +7,22 @@
   },
   "main": "./dist/extension.js",
   "activationEvents": [
-    "onCommand:webview-lit-sample.sayHello"
+    "onCommand:webview-lit-sample.satrt",
+    "onWebviewPanel:webview-lit-sample"
   ],
   "contributes": {
     "commands": [
       {
-        "command": "webview-lit-sample.sayHello",
+        "command": "webview-lit-sample.satrt",
         "title": "Say Hello from Fable!"
       }
     ]
   },
   "scripts": {
     "install": "dotnet tool restore && dotnet paket update",
-     "build": "dotnet fable src -o build --run pnpm run esbuild",
-     "start": "dotnet fable watch src -s -o build --run pnpm run esbuild -- --watch",
-     "pack": "pnpm run build && vsce package",
+    "build": "dotnet fable src -o build --run pnpm run esbuild",
+    "start": "dotnet fable watch src -s -o build --run pnpm run esbuild -- --watch",
+    "pack": "pnpm run build && vsce package",
     "esbuild": "node esbuild"
   },
   "keywords": [
@@ -31,8 +32,13 @@
   "author": "",
   "license": "",
   "devDependencies": {
+    "@web/test-runner": "0.13.22",
+    "@web/test-runner-commands": "0.5.13",
     "esbuild": "^0.13.15",
     "vsce": "^2.5.1",
     "yargs": "^17.3.0"
+  },
+  "dependencies": {
+    "lit": "2.0.2"
   }
 }
