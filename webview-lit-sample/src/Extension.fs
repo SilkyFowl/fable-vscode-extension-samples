@@ -5,6 +5,7 @@ open Fable.Core
 open Fable.Core.JsInterop
 open Fable.Import.VSCode
 open Fable.Import.VSCode.Vscode
+// open Browser
 
 [<AutoOpen>]
 module Helpler =
@@ -41,15 +42,17 @@ module Panel =
         Seq.init 32 (fun _ -> possible[possible.Length - 1 |> random.Next])
         |> String.Concat
 
-    let getWebviewContent cspSource extensionUri =
 
-        /// Get path to resource on disk
-        let scriptPathOnDisk = vscode.Uri.joinPath (extensionUri, "dist", "main.js")
+    let getWebviewContent (webview: Webview) extensionUri =
+        let getRsourceUri pathSegments =
 
-        /// Get the special URI to use with the webview
-        let scriptUri =
-            scriptPathOnDisk.``with`` !!{| scheme = "vscode-resource" |}
+            vscode.Uri.joinPath (extensionUri, pathSegments)
+            |> webview.asWebviewUri
             |> string
+
+        let scriptUri = getRsourceUri [| "dist"; "main.js" |]
+
+        let toolkitUri = getRsourceUri [| "dist"; "toolkit.js" |]
 
         let nonce = getNonce ()
 
@@ -64,23 +67,23 @@ module Panel =
                 <meta charset="UTF-8">
                 <meta http-equiv="Content-Security-Policy"
                       content="default-src 'none';
-                               style-src {cspSource};
-                               img-src {cspSource} https:;
+                               style-src {webview.cspSource} https:;
+                               img-src {webview.cspSource} https:;
                                script-src 'nonce-{nonce}';">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <script nonce="{nonce}">{esModuleExports}</script>
                 <title>{viewType}</title>
             </head>
             <body>
-                <my-container nonce="{nonce}">
-                </my-container>
-                <script nonce="{nonce}">{esModuleExports}</script>
+                <my-container nonce="{nonce}"></my-container>
+                <script nonce="{nonce}" type="module" src="{toolkitUri}"></script>
                 <script nonce="{nonce}" type="module" crossorigin src="{scriptUri}"></script>
             </body>
         </html>
         """
 
     let initWebviewPanel extensionUri (panel: WebviewPanel) =
-        panel.webview.html <- getWebviewContent panel.webview.cspSource extensionUri
+        panel.webview.html <- getWebviewContent panel.webview extensionUri
 
         panel.onDidDispose.Invoke (fun _ ->
             window.showInformationMessage "Lit Cat Coding closed."
@@ -94,6 +97,7 @@ module Panel =
         |> disposables.Push
 
     let start extensionUri _ =
+
         match currentPanel with
         | Some panel -> panel.reveal (ViewColumn.Beside, true)
         | None ->
@@ -115,10 +119,17 @@ module Panel =
         !!{| deserializeWebviewPanel =
             fun (panel: WebviewPanel) (state: obj) ->
                 async {
+                    currentPanel <-
+                        panel
+                        |> tap (initWebviewPanel extensionUri)
+                        |> Some
+
+                    panel.reveal (ViewColumn.Active, false)
+
+                    currentPanel <- Some panel
+
                     window.showInformationMessage $"Lit Cat Coding deserialized. state: {state}"
                     |> ignore
-
-                    initWebviewPanel extensionUri panel
                 }
                 |> Async.StartAsPromise |}
 

@@ -12,6 +12,7 @@
             "args": [
                 "--disable-extensions",
                 "--trace-deprecation",
+                "--enable-proposed-api",
                 "--extensionDevelopmentPath=${workspaceRoot}"
             ],
             "stopOnEntry": false,

@@ -14,7 +14,7 @@
     "commands": [
       {
         "command": "webview-lit-sample.satrt",
-        "title": "Say Hello from Fable!"
+        "title": "Open Cat Coding"
       }
     ]
   },
@@ -39,6 +39,7 @@
     "yargs": "^17.3.0"
   },
   "dependencies": {
+    "@vscode/webview-ui-toolkit": "^0.8.4",
     "lit": "2.0.2"
   }
 }

@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@vscode/webview-ui-toolkit': ^0.8.4
   '@web/test-runner': 0.13.22
   '@web/test-runner-commands': 0.5.13
   esbuild: ^0.13.15
@@ -9,6 +10,7 @@ specifiers:
   yargs: ^17.3.0
 
 dependencies:
+  '@vscode/webview-ui-toolkit': 0.8.4
   lit: 2.0.2
 
 devDependencies:
@@ -43,6 +45,25 @@ packages:
 
   /@lit/reactive-element/1.0.2:
     resolution: {integrity: sha512-oz3d3MKjQ2tXynQgyaQaMpGTDNyNDeBdo6dXf1AbjTwhA1IRINHmA7kSaVYv9ttKweNkEoNqp9DqteDdgWzPEg==}
+    dev: false
+
+  /@microsoft/fast-element/1.6.2:
+    resolution: {integrity: sha512-TrFOpe9k9xIK2iLfIG5T2+bavUAWBvAC/KQ/3ecFsK65l9PAZ/j3zlkyLxNrpIksFtUBkfVdV03kwFurZjqzKQ==}
+    dev: false
+
+  /@microsoft/fast-foundation/2.27.1:
+    resolution: {integrity: sha512-HDbyjqhkFxF8LAAsS5hZRVzNTG8wFRem3FuW391hCLh8vP7+JibEFxFIMMSG1sdRkOOzRfWxlsj4gYGpkZgMAw==}
+    dependencies:
+      '@microsoft/fast-element': 1.6.2
+      '@microsoft/fast-web-utilities': 5.0.2
+      tabbable: 5.2.1
+      tslib: 1.14.1
+    dev: false
+
+  /@microsoft/fast-web-utilities/5.0.2:
+    resolution: {integrity: sha512-J8Wy64V1NWF/UjFJ1mvmJNNPChbWobsNkJ8xNaV5/M+VKOQEOheojrOS+RmOUG7DKTBlCLIbUvyXsj1YiCfwkA==}
+    dependencies:
+      exenv-es6: 1.0.0
     dev: false
 
   /@nodelib/fs.scandir/2.1.5:
@@ -270,6 +291,13 @@ packages:
       '@types/node': 16.11.11
     dev: true
     optional: true
+
+  /@vscode/webview-ui-toolkit/0.8.4:
+    resolution: {integrity: sha512-hIbC/awoqCA+dPDGcFGxPH6OGVF/vsgrol9tv5P+eAdc7YMGvZmtezBgRmdGesJmI6Hvv+Buw8qtXwxSj215Jg==}
+    dependencies:
+      '@microsoft/fast-element': 1.6.2
+      '@microsoft/fast-foundation': 2.27.1
+    dev: false
 
   /@web/browser-logs/0.2.5:
     resolution: {integrity: sha512-Qxo1wY/L7yILQqg0jjAaueh+tzdORXnZtxQgWH23SsTCunz9iq9FvsZa8Q5XlpjnZ3vLIsFEuEsCMqFeohJnEg==}
@@ -1223,6 +1251,10 @@ packages:
     resolution: {integrity: sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=}
     engines: {node: '>= 0.6'}
     dev: true
+
+  /exenv-es6/1.0.0:
+    resolution: {integrity: sha512-fcG/TX8Ruv9Ma6PBaiNsUrHRJzVzuFMP6LtPn/9iqR+nr9mcLeEOGzXQGLC5CVQSXGE98HtzW2mTZkrCA3XrDg==}
+    dev: false
 
   /expand-template/2.0.3:
     resolution: {integrity: sha512-XYfuKMvj4O35f/pOXLObndIRvyQ+/+6AhODh+OKWj9S9498pHHn/IMszH+gt0fBCRWMNfk1ZSp5x3AifmnI2vg==}
@@ -2438,6 +2470,10 @@ packages:
       has-flag: 4.0.0
     dev: true
 
+  /tabbable/5.2.1:
+    resolution: {integrity: sha512-40pEZ2mhjaZzK0BnI+QGNjJO8UYx9pP5v7BGe17SORTO0OEuuaAwQTkAp8whcZvqon44wKFOikD+Al11K3JICQ==}
+    dev: false
+
   /table-layout/1.0.2:
     resolution: {integrity: sha512-qd/R7n5rQTRFi+Zf2sk5XVVd9UQl6ZkduPFC3S7WEGJAmetDTjY3qPN50eSKzwuzEyQKy5TN2TiZdkIjos2L6A==}
     engines: {node: '>=8.0.0'}
@@ -2501,6 +2537,10 @@ packages:
     dependencies:
       punycode: 2.1.1
     dev: true
+
+  /tslib/1.14.1:
+    resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
+    dev: false
 
   /tslib/2.3.1:
     resolution: {integrity: sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==}

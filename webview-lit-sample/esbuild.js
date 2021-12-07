@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const yargs = require('yargs');
 const { build } = require('esbuild')
+const fs = require('fs')
 
 const argv = yargs
     .option('watch', {
@@ -11,6 +12,8 @@ const argv = yargs
     .help()
     .alias('help', 'h')
     .argv;
+
+fs.copyFileSync("node_modules/@vscode/webview-ui-toolkit/dist/toolkit.js", "dist/toolkit.js")
 
 build({
     entryPoints: {
