@@ -13,11 +13,6 @@ type VSCode =
 [<Emit("acquireVsCodeApi()")>]
 let acquireVsCodeApi () : VSCode = jsNative
 
-[<Emit("window.litNonce")>]
-let litNonce ():string = jsNative
-
-let nonce = litNonce()
-
 let vscode = acquireVsCodeApi ()
 
 type Cat = { value: string; name: string }
@@ -31,7 +26,7 @@ let cats =
         name = "Testing Cat" } ]
 
 let radioCat cat =
-    html $"""<vscode-radio nonce={nonce} name="cats" value="{cat.value}" >{cat.name}</vscode-radio>"""
+    html $"""<vscode-radio name="cats" value="{cat.value}" >{cat.name}</vscode-radio>"""
 
 let getGiphy src =
     $"https://media.giphy.com/media/{src}/giphy.gif"
@@ -40,25 +35,29 @@ let getGiphy src =
 
 [<HookComponent>]
 let MyContainer () =
-    let counter, setCounter = vscode.getState () |> Option.defaultValue 0 |> Hook.useState
+    let counter, setCounter =
+        vscode.getState ()
+        |> Option.defaultValue 0
+        |> Hook.useState
+
     let setCounter = setCounter >> (fun _ -> vscode.setState counter)
 
-    let imgSrc, setImgSrc = getGiphy "5Zesu5VPNGJlm"|> Hook.useState
+    let imgSrc, setImgSrc = getGiphy "5Zesu5VPNGJlm" |> Hook.useState
 
     html
         $"""
         <h2>Counter</h2>
-        <h3><vscode-tag nonce={nonce} >{counter}</vscode-tag></h3>
+        <h3><vscode-tag >{counter}</vscode-tag></h3>
         <h3>
-            <vscode-button nonce={nonce} @click={fun _ -> setCounter (counter + 1)}>+</vscode-button>
-            <vscode-button nonce={nonce} @click={fun _ -> setCounter (counter - 1)}>-</vscode-button>
+            <vscode-button @click={fun _ -> setCounter (counter + 1)}>+</vscode-button>
+            <vscode-button @click={fun _ -> setCounter (counter - 1)}>-</vscode-button>
         </h3>
         <h3>
-            <vscode-button nonce={nonce} @click={fun _ -> setCounter 0}>Reset!!</vscode-button>
+            <vscode-button @click={fun _ -> setCounter 0}>Reset!!</vscode-button>
         </h3>
-        <vscode-divider nonce={nonce}></vscode-divider>
+        <vscode-divider></vscode-divider>
         <h2>Radio Group</h2>
-        <vscode-radio-group nonce={nonce} @change={Ev(fun e -> getGiphy e.target.Value |> setImgSrc)}>
+        <vscode-radio-group @change={Ev(fun e -> getGiphy e.target.Value |> setImgSrc)}>
             <label slot="label">Select Cats</label>
             {cats |> Lit.mapUnique (fun x -> x.value) radioCat}
         </vscode-radio-group>

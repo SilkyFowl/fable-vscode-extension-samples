@@ -32,15 +32,6 @@ module Panel =
             let d = disposables.Pop()
             d.dispose () |> ignore
 
-    let getNonce () =
-        let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-
-        let random = Random()
-
-        Seq.init 32 (fun _ -> possible[possible.Length - 1 |> random.Next])
-        |> String.Concat
-
-
     let getWebviewContent (webview: Webview) extensionUri =
         let getRsourceUri pathSegments =
 
@@ -52,8 +43,6 @@ module Panel =
 
         let toolkitUri = getRsourceUri [| "dist"; "toolkit.js" |]
 
-        let nonce = getNonce ()
-
         /// https://stackoverflow.com/a/43702240/16630205
         let esModuleExports = js """var exports = {"__esModule": true};"""
 
@@ -63,21 +52,14 @@ module Panel =
         <html lang="en">
             <head>
                 <meta charset="UTF-8">
-                <meta http-equiv="Content-Security-Policy"
-                      content="default-src 'self';
-                               img-src {webview.cspSource} https: blob:;
-                               style-src 'nonce-{nonce}' {webview.cspSource};
-                               style-src-attr 'nonce-{nonce}';
-                               script-src 'nonce-{nonce}';">
                 <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
                 <meta name="csp" >
-                <script nonce="{nonce}" defer>window.litNonce = '{nonce}';</script>
-                <script nonce="{nonce}" defer>{esModuleExports}</script>
+                <script defer>{esModuleExports}</script>
                 <title>{viewType}</title>
             </head>
             <body >
-                <script nonce="{nonce}" type="module" src="{toolkitUri}"></script>
-                <script nonce="{nonce}" type="module" src="{scriptUri}"></script>
+                <script type="module" src="{toolkitUri}"></script>
+                <script type="module" src="{scriptUri}"></script>
             </body>
         </html>
         """
