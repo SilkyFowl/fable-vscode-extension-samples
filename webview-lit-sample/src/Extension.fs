@@ -126,8 +126,6 @@ module Panel =
 
                     panel.reveal (ViewColumn.Active, false)
 
-                    currentPanel <- Some panel
-
                     window.showInformationMessage $"Lit Cat Coding deserialized. state: {state}"
                     |> ignore
                 }
