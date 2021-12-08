@@ -70,7 +70,7 @@ module Panel =
                                style-src {webview.cspSource} https:;
                                img-src {webview.cspSource} https:;
                                script-src 'nonce-{nonce}';">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
                 <script nonce="{nonce}">{esModuleExports}</script>
                 <title>{viewType}</title>
             </head>
