@@ -5,7 +5,6 @@ open Fable.Core
 open Fable.Core.JsInterop
 open Fable.Import.VSCode
 open Fable.Import.VSCode.Vscode
-// open Browser
 
 [<AutoOpen>]
 module Helpler =
@@ -21,7 +20,6 @@ module Helpler =
 
     type Control.AsyncBuilder with
         member _.Bind(t: Thenable<'T>, f: 'T -> Async<'R>) : Async<'R> = async.Bind(Async.AwaitPromise !!t, f)
-
 
 module Panel =
 
@@ -66,18 +64,20 @@ module Panel =
             <head>
                 <meta charset="UTF-8">
                 <meta http-equiv="Content-Security-Policy"
-                      content="default-src 'none';
-                               style-src {webview.cspSource} https:;
-                               img-src {webview.cspSource} https:;
+                      content="default-src 'self';
+                               img-src {webview.cspSource} https: blob:;
+                               style-src 'nonce-{nonce}' {webview.cspSource};
+                               style-src-attr 'nonce-{nonce}';
                                script-src 'nonce-{nonce}';">
                 <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-                <script nonce="{nonce}">{esModuleExports}</script>
+                <meta name="csp" >
+                <script nonce="{nonce}" defer>window.litNonce = '{nonce}';</script>
+                <script nonce="{nonce}" defer>{esModuleExports}</script>
                 <title>{viewType}</title>
             </head>
-            <body>
-                <my-container nonce="{nonce}"></my-container>
+            <body >
                 <script nonce="{nonce}" type="module" src="{toolkitUri}"></script>
-                <script nonce="{nonce}" type="module" crossorigin src="{scriptUri}"></script>
+                <script nonce="{nonce}" type="module" src="{scriptUri}"></script>
             </body>
         </html>
         """

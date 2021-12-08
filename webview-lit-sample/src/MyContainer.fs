@@ -2,6 +2,7 @@ module MyContainer
 
 open Lit
 open Fable.Core
+open Browser
 
 [<AllowNullLiteral>]
 type VSCode =
@@ -11,6 +12,11 @@ type VSCode =
 
 [<Emit("acquireVsCodeApi()")>]
 let acquireVsCodeApi () : VSCode = jsNative
+
+[<Emit("window.litNonce")>]
+let litNonce ():string = jsNative
+
+let nonce = litNonce()
 
 let vscode = acquireVsCodeApi ()
 
@@ -25,42 +31,39 @@ let cats =
         name = "Testing Cat" } ]
 
 let radioCat cat =
-    html $"""<vscode-radio name="cats" value="{cat.value}" >{cat.name}</vscode-radio>"""
+    html $"""<vscode-radio nonce={nonce} name="cats" value="{cat.value}" >{cat.name}</vscode-radio>"""
 
 let getGiphy src =
     $"https://media.giphy.com/media/{src}/giphy.gif"
 
-[<LitElement("my-container")>]
+
+
+[<HookComponent>]
 let MyContainer () =
-
-    // This call is obligatory to initialize the web component
-    let _, props =
-        LitElement.init (fun init ->
-            init.props <-
-                {| counter = Prop.Of(vscode.getState () |> Option.defaultValue 0)
-                   imgSrc = Prop.Of(getGiphy "5Zesu5VPNGJlm") |})
-
-    let counter, setCounter = Hook.useState props.counter.Value
+    let counter, setCounter = vscode.getState () |> Option.defaultValue 0 |> Hook.useState
     let setCounter = setCounter >> (fun _ -> vscode.setState counter)
 
-    let imgSrc, setImgSrc = Hook.useState props.imgSrc.Value
+    let imgSrc, setImgSrc = getGiphy "5Zesu5VPNGJlm"|> Hook.useState
 
     html
         $"""
         <h2>Counter</h2>
-        <h3><vscode-tag>{counter}</vscode-tag></h3>
+        <h3><vscode-tag nonce={nonce} >{counter}</vscode-tag></h3>
         <h3>
-            <vscode-button @click={fun _ -> setCounter (counter + 1)}>+</vscode-button>
-            <vscode-button @click={fun _ -> setCounter (counter - 1)}>-</vscode-button>
+            <vscode-button nonce={nonce} @click={fun _ -> setCounter (counter + 1)}>+</vscode-button>
+            <vscode-button nonce={nonce} @click={fun _ -> setCounter (counter - 1)}>-</vscode-button>
         </h3>
         <h3>
-            <vscode-button @click={fun _ -> setCounter 0}>Reset</vscode-button>
+            <vscode-button nonce={nonce} @click={fun _ -> setCounter 0}>Reset!!</vscode-button>
         </h3>
-        <vscode-divider></vscode-divider>
+        <vscode-divider nonce={nonce}></vscode-divider>
         <h2>Radio Group</h2>
-        <vscode-radio-group @change={Ev(fun e -> getGiphy e.target.Value |> setImgSrc)}>
+        <vscode-radio-group nonce={nonce} @change={Ev(fun e -> getGiphy e.target.Value |> setImgSrc)}>
             <label slot="label">Select Cats</label>
             {cats |> Lit.mapUnique (fun x -> x.value) radioCat}
         </vscode-radio-group>
-        <img .src={imgSrc} width="300" />
+        <img src={imgSrc} width="300" />
         """
+
+
+MyContainer() |> Lit.render document.body
