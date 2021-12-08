@@ -37,13 +37,13 @@ let MyContainer () =
     let _, props =
         LitElement.init (fun init ->
             init.props <-
-                {| initial = Prop.Of(vscode.getState () |> Option.defaultValue 0)
-                   giphy = Prop.Of(getGiphy "5Zesu5VPNGJlm") |})
+                {| counter = Prop.Of(vscode.getState () |> Option.defaultValue 0)
+                   imgSrc = Prop.Of(getGiphy "5Zesu5VPNGJlm") |})
 
-    let counter, setCounter = Hook.useState props.initial.Value
+    let counter, setCounter = Hook.useState props.counter.Value
     let setCounter = setCounter >> (fun _ -> vscode.setState counter)
 
-    let giphy, setGiphy = Hook.useState props.giphy.Value
+    let imgSrc, setImgSrc = Hook.useState props.imgSrc.Value
 
     html
         $"""
@@ -58,9 +58,9 @@ let MyContainer () =
         </h3>
         <vscode-divider></vscode-divider>
         <h2>Radio Group</h2>
-        <vscode-radio-group @change={Ev(fun e -> getGiphy e.target.Value |> setGiphy)}>
+        <vscode-radio-group @change={Ev(fun e -> getGiphy e.target.Value |> setImgSrc)}>
             <label slot="label">Select Cats</label>
             {cats |> Lit.mapUnique (fun x -> x.value) radioCat}
         </vscode-radio-group>
-        <img .src={giphy} width="300" />
+        <img .src={imgSrc} width="300" />
         """
