@@ -17,10 +17,10 @@ module Helpler =
     let js = sprintf
 
     type Promise.PromiseBuilder with
-        member x.Bind(t: Thenable<'T>, f: 'T -> JS.Promise<'R>) : JS.Promise<'R> = promise.Bind(!!t, f)
+        member _.Bind(t: Thenable<'T>, f: 'T -> JS.Promise<'R>) : JS.Promise<'R> = promise.Bind(!!t, f)
 
-    type Microsoft.FSharp.Control.AsyncBuilder with
-        member x.Bind(t: Thenable<'T>, f: 'T -> Async<'R>) : Async<'R> = async.Bind(Async.AwaitPromise !!t, f)
+    type Control.AsyncBuilder with
+        member _.Bind(t: Thenable<'T>, f: 'T -> Async<'R>) : Async<'R> = async.Bind(Async.AwaitPromise !!t, f)
 
 
 module Panel =
