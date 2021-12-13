@@ -19,9 +19,8 @@ fs.copyFileSync("node_modules/@vscode/webview-ui-toolkit/dist/toolkit.js", "dist
 build({
     entryPoints: {
         extension: 'build/Extension.js',
-        main: 'build/MyContainer.js',
-        litelement: 'build/MyContainerCSP.js'
-    },
+        main: 'build/MyContainer.js'
+        },
     bundle: true,
     minify: !argv.watch,
     format: 'cjs',

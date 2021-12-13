@@ -18,8 +18,12 @@ module Helpler =
     type Promise.PromiseBuilder with
         member _.Bind(t: Thenable<'T>, f: 'T -> JS.Promise<'R>) : JS.Promise<'R> = promise.Bind(!!t, f)
 
+
     type Control.AsyncBuilder with
         member _.Bind(t: Thenable<'T>, f: 'T -> Async<'R>) : Async<'R> = async.Bind(Async.AwaitPromise !!t, f)
+
+    module Async =
+        let StartAsThenable (t: Async<'T>) : Thenable<'T> = !!(Async.StartAsPromise t)
 
 module Panel =
 
@@ -48,7 +52,7 @@ module Panel =
             |> webview.asWebviewUri
             |> string
 
-        let scriptUri = getRsourceUri [| "dist"; "maincsp.js" |]
+        let scriptUri = getRsourceUri [| "dist"; "main.js" |]
 
         let toolkitUri = getRsourceUri [| "dist"; "toolkit.js" |]
 
@@ -73,7 +77,7 @@ module Panel =
                 <script nonce="{nonce}">{esModuleExports}</script>
                 <title>{viewType}</title>
             </head>
-            <my-element></my-element>
+            <body></body>
             <script nonce="{nonce}" type="module" src="{toolkitUri}"></script>
             <script nonce="{nonce}" type="module" src="{scriptUri}"></script>
         </html>
@@ -112,9 +116,9 @@ module Panel =
 
         None
 
-    let serializer extensionUri : WebviewPanelSerializer =
-        !!{| deserializeWebviewPanel =
-            fun (panel: WebviewPanel) (state: obj) ->
+    let serializer extensionUri =
+        { new WebviewPanelSerializer with
+            member _.deserializeWebviewPanel(panel, state) =
                 async {
                     currentPanel <-
                         panel
@@ -126,7 +130,8 @@ module Panel =
                     window.showInformationMessage $"Lit Cat Coding deserialized. state: {state}"
                     |> ignore
                 }
-                |> Async.StartAsPromise |}
+                |> Async.StartAsThenable }
+
 
 
 let activate (context: ExtensionContext) =

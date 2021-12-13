@@ -65,3 +65,4 @@ let MyContainer () =
         """
 
 
+MyContainer() |> Lit.render document.body
