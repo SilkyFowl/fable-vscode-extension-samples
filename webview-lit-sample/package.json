@@ -39,7 +39,14 @@
     "yargs": "^17.3.0"
   },
   "dependencies": {
-    "@vscode/webview-ui-toolkit": "^0.8.4",
+    "@vscode/webview-ui-toolkit": "link:..\\..\\vscode-webview-ui-toolkit",
     "lit": "2.0.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "quux": "npm:@myorg/quux@^1.0.0",
+      "bar@^2.1.0": "3.0.0",
+      "qar@1>zoo": "2"
+    }
   }
 }

@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 const yargs = require('yargs');
 const { build } = require('esbuild')
-const fs = require('fs')
+const fs = require('fs');
+const { Readable } = require('stream');
 
 const argv = yargs
     .option('watch', {
@@ -18,7 +19,8 @@ fs.copyFileSync("node_modules/@vscode/webview-ui-toolkit/dist/toolkit.js", "dist
 build({
     entryPoints: {
         extension: 'build/Extension.js',
-        main: 'build/MyContainer.js'
+        main: 'build/MyContainer.js',
+        litelement: 'build/MyContainerCSP.js'
     },
     bundle: true,
     minify: !argv.watch,

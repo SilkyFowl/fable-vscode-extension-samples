@@ -47,7 +47,7 @@ let MyContainer () =
     html
         $"""
         <h2>Counter</h2>
-        <h3><vscode-tag >{counter}</vscode-tag></h3>
+        <h3><vscode-tag>{counter}</vscode-tag></h3>
         <h3>
             <vscode-button @click={fun _ -> setCounter (counter + 1)}>+</vscode-button>
             <vscode-button @click={fun _ -> setCounter (counter - 1)}>-</vscode-button>
@@ -58,11 +58,10 @@ let MyContainer () =
         <vscode-divider></vscode-divider>
         <h2>Radio Group</h2>
         <vscode-radio-group @change={Ev(fun e -> getGiphy e.target.Value |> setImgSrc)}>
-            <label slot="label">Select Cats</label>
+            <label slot="label">Select Cats.</label>
             {cats |> Lit.mapUnique (fun x -> x.value) radioCat}
         </vscode-radio-group>
         <img src={imgSrc} width="300" />
         """
 
 
-MyContainer() |> Lit.render document.body
