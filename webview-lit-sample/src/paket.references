@@ -3,4 +3,5 @@ Fable.Core
 Fable.Lit.Test
 Fable.Lit
 Fable.Promise
+Fable.Lit.Elmish
 File:Fable.Import.VSCode.fs
